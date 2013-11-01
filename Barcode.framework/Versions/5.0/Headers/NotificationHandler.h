@@ -18,14 +18,14 @@
 /**
  * When hardware connected, it will callback this method ( if you addAccessoryDidConnectNotification to MLConnection ).
  *
- * @see MLConnection addAccessoryDidConnectNotification
+ * @see MLScanner::addAccessoryDidConnectNotification:(NSObject <NotificationHandler> *)
  */
 - (void)connectNotify;
 
 /**
  * When hardware disconnected, it will callback this method ( if you addAccessoryDidDisconnectNotification to MLConnection ).
  *
- * @see MLConnection addAccessoryDidDisconnectNotification
+ * @see MLScanner::addAccessoryDidDisconnectNotification:(NSObject <NotificationHandler> *)
  */
 - (void)disconnectNotify;
 
@@ -41,12 +41,12 @@
  * If return TRUE, framework will call method: handleRequest:.
  *
  * @param command The object implement ReceiveCommandProtocol protocol which can return will handle receive command or not.
- * @retval TRUE The handler will handle this command.
+ * @retval  TRUE The handler will handle this command.
  * @retval FALSE The handler will not handle this command.
  *
  * @see handleRequest:
  */
-- (BOOL)isHandler:(NSObject <ReceiveCommandProtocol> *)command;
+- (BOOL)isHandler:(ReceiveCommand *)command;
 
 /**
  * After Barcode framework recevie command and isHandler: returns TRUE, it will call this method and let handler take care this command.
@@ -55,7 +55,7 @@
  *
  * @see isHandler:
  */
-- (void)handleRequest:(NSObject <ReceiveCommandProtocol> *)command;
+- (void)handleRequest:(ReceiveCommand *)command;
 
 /**
  * After call MLScanner system trigger command, for example like batteryRemain.

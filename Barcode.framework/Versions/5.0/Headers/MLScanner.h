@@ -1,5 +1,5 @@
 //
-//  TranslateConnection.h
+//  MLScanner.h
 //  BarcodeFramework
 //
 //  Created by mikimoto on 2010/7/9.
@@ -8,23 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import <ExternalAccessory/ExternalAccessory.h>
+#import "MLEABase.h"
+
+@class ExecuteCommand;
 
 /**
  * @brief Create and maintain accessory connection. After you had connection, you can scan barcode through iPDT380, iScan or AScan.
  *
  * Connection is an Translate Layer, it can used to create, maintain connection and execute commands which is define in Command Layer.
  */
-@interface MLScanner : NSObject <EAAccessoryDelegate>{
-  @private
-  NSMutableArray      *connectNotificationHandlerArray;
-  NSMutableArray      *disconnectNotificationHandlerArray;
-  NSMutableArray      *receiveCommandArray;
-  NSMutableArray      *receiveCommandHandlerArray;
-  NSMutableArray      *accessoryArray;
-  NSMutableDictionary *connectNotificationQueue;
-  BOOL                connectNotificationQueueIsRunning;
-  NSNumber            *batteryCapacity;
-}
+@interface MLScanner : MLEABase
 
 /**
  * Set the framework initalize and setup. Before you start using other function, you must call this method once.
@@ -41,31 +34,20 @@
 /**
  * Detect scanner accessory is connected or not.
  *
- * @retval TRUE If one of iPDT380, iScan or aScan is connected and work fine.
+ * @retval  TRUE If one of iPDT380, iScan or aScan is connected and work fine.
  * @retval FALSE If nor iPDT380, iScan or aScan is not connected, or device error. In this status, execute command will be ignore.
  */
 - (BOOL)isConnected;
-
-/**
- * Execute command.
- *
- * Send command layer object to iPDT380, iScan and aScan, but when isConnected return FALSE, command will be ignore.
- * @see isConnected
- * @see ScanShot
- *
- * @param command The command implement NSObject<CommandProtocol> in command layer that you want to send to scanner accessory.
- */
-- (void)execute:(NSObject <CommandProtocol> *)command;
 
 /**
  * Add handler to handle iPDT380, iScan or aScan connected event.
  * Handler must implement NotificationHandler protocol<br>
  * If you use UIView, you can add handler in viewDidLoad.
  * Please remove handler in viewDidUnload.
- * @see removeAccessoryDidConnectNotification:(NSObject<NotificationHandler> *) handler
- * @see addAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *) handler
- * @see removeAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *) handler
- * @see NotificationHandler
+ * @see removeAccessoryDidConnectNotification:(NSObject<NotificationHandler> *)
+ * @see addAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *)
+ * @see removeAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *)
+ * @see NotificationHandler::connectNotify
  *
  * @param handler The object implement NotificationHandler protocol which can handle accessory connected notification.
  */
@@ -74,10 +56,10 @@
 /**
  * Remove handler not to handle iPDT380, iScan or aScan connected event
  * After you remove handler, you will not trigger with iPDT380, iScan or aScan connected event.
- * @see addAccessoryDidConnectNotification:(NSObject<NotificationHandler> *) handler
- * @see addAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *) handler
- * @see removeAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *) handler
- * @see NotificationHandler
+ * @see addAccessoryDidConnectNotification:(NSObject<NotificationHandler> *)
+ * @see addAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *)
+ * @see removeAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *)
+ * @see NotificationHandler::connectNotify
  *
  * @param handler The object implement NotificationHandler protocol.
  */
@@ -88,10 +70,10 @@
  * Handler must implement NotificationHandler protocol<br>
  * If you use UIView, you can add handler in viewDidLoad.
  * Please remove handler in viewDidUnload.
- * @see addAccessoryDidConnectNotification:(NSObject<NotificationHandler> *) handler
- * @see removeAccessoryDidConnectNotification:(NSObject<NotificationHandler> *) handler
- * @see removeAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *) handler
- * @see NotificationHandler
+ * @see addAccessoryDidConnectNotification:(NSObject<NotificationHandler> *)
+ * @see removeAccessoryDidConnectNotification:(NSObject<NotificationHandler> *)
+ * @see removeAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *)
+ * @see NotificationHandler::disconnectNotify
  *
  * @param handler The object implement NotificationHandler protocol which can handle accessory disconnected notification.
  */
@@ -100,10 +82,10 @@
 /**
  * Remove handler not to handle iPDT380, iScan or aScan disconnected event.
  * After you remove handler, you will not trigger with iPDT380 or iScan disconnected event.
- * @see addAccessoryDidConnectNotification:(NSObject<NotificationHandler> *) handler
- * @see removeAccessoryDidConnectNotification:(NSObject<NotificationHandler> *) handler
- * @see addAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *) handler
- * @see NotificationHandler
+ * @see addAccessoryDidConnectNotification:(NSObject<NotificationHandler> *)
+ * @see removeAccessoryDidConnectNotification:(NSObject<NotificationHandler> *)
+ * @see addAccessoryDidDisconnectNotification:(NSObject<NotificationHandler> *)
+ * @see NotificationHandler::disconnectNotify
  *
  * @param handler The object implement NotificationHandler protocol.
  */
@@ -115,7 +97,7 @@
  * Handler must implement ReceiveCommandHandler protocol<br>
  * If you use UIView, you can add handler in viewDidLoad.
  * Please remove handler in viewDidUnload.
- * @see removeReceiveCommandHandler:(NSObject<ReceiveCommandHandler> *) handler
+ * @see removeReceiveCommandHandler:(NSObject<ReceiveCommandHandler> *)
  * @see ReceiveCommandHandler
  *
  * @param handler The object implement ReceiveCommandHandler protocol which can handle receive command.
@@ -125,7 +107,7 @@
 /**
  * Remove handler which handle receive command layer object event
  * After you remove handler, you will not trigger with iPDT380, iScan or aScan receive command event.
- * @see addReceiveCommandHandler:(NSObject<ReceiveCommandHandler> *) handler
+ * @see addReceiveCommandHandler:(NSObject<ReceiveCommandHandler> *)
  * @see ReceiveCommandHandler
  *
  * @param handler The object implement ReceiveCommandHandler protocol.
@@ -147,6 +129,9 @@
 
 /**
  * Get scanner accessory battery info
+ *
+ * @see batteryOnCharge
+ * @see batteryCapacity
  */
 - (void)batteryRemain;
 
@@ -157,25 +142,70 @@
 
 /**
  * set scanner accessory vibra motor strength
- * @param i 0=off, 1=small, 2=medium, 3=big
+ *
+ * @param i 0 turn vibra motor off
+ * @param i 1 turn vibra motor strength small
+ * @param i 2 turn vibra motor strength medium
+ * @param i 3 turn vibra motor strength big
  */
 - (void)vibraMotorStrength:(NSUInteger)i;
 
 /**
  * switch scanner accessory beep on or off
- * @param status TRUE=on, FALSE=off
+ *
+ * @param status TRUE turn beep on.
+ * @param status FALSE turn beep off.
  */
 - (void)beepSwitch:(BOOL)status;
 
 /**
  * detect app layout need upside down or not
- * @retval BOOL if app layout need upsidedown return TRUE, else return FALSE
+ *
+ * @retval  TRUE if app layout need upsidedown
+ * @retval FALSE if app layout do't need upsidedown
  */
 - (BOOL)interfaceOrientationNeedUpsideDown;
 
 /**
  * get battery capacity. before you get this information, you must call batteryRemain function first.
- * @retval NSNumber return battery capacity information with percentage number, over 100% means in charging. For example: 12.5 means 12.5%, 110% means in charging.
+ *
+ * @retval NSNumber return battery capacity information with percentage number, over 100% means in charging. For example: 12.5 means 12.5%.
+ *
+ * @see batteryOnCharge
  */
 - (NSNumber *)batteryCapacity;
+
+/**
+ * get status of battery on charge or not.
+ *
+ * @retval YES battery on charge.
+ * @retval  NO battery not on charge.
+ *
+ * @see batteryCapacity
+ */
+- (BOOL)batteryOnCharge;
+
+/**
+ * use this method to turn on/off prevent conitune fast scan process. If your barcode contains 'CE', please turn this option to FALSE.
+ *
+ * @param on  TRUE turn prevent conitune fast scan process on, default is on.
+ * @param on FALSE turn prevent conitune fast scan process off.
+ */
+- (void)preventFastInputWithinFastContinueInput:(BOOL)on;
+
+/**
+ * return prevent contiune fast scan process flag.
+ *
+ * @retval YES trun on
+ * @retval NO turn off
+ */
+- (BOOL)isPreventFastInput;
+
+/**
+ * Sync Switch for 30 pin connector
+ */
+- (void)configSyncSwitch:(BOOL)on;
+
+- (void)execute:(ExecuteCommand *)command;
+
 @end

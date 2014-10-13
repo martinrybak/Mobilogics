@@ -7,6 +7,13 @@
  *
  */
 
+enum vibraMotorStrengthDef {
+  vibraMotorStrengthOff,
+  vibraMotorStrengthSmall,
+  vibraMotorStrengthMedium,
+  vibraMotorStrengthBig
+};
+
 @interface Command : NSObject
 
 @end

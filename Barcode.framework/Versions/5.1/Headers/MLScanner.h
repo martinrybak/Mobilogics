@@ -1,10 +1,10 @@
-//
-//  MLScanner.h
-//  BarcodeFramework
-//
-//  Created by mikimoto on 2010/7/9.
-//  Copyright 2010 MobiLogics. All rights reserved.
-//
+  //
+  //  MLScanner.h
+  //  BarcodeFramework
+  //
+  //  Created by mikimoto on 2010/7/9.
+  //  Copyright 2010 MobiLogics. All rights reserved.
+  //
 
 #import <Foundation/Foundation.h>
 #import <ExternalAccessory/ExternalAccessory.h>
@@ -21,21 +21,21 @@
 
 /**
  * Set the framework initalize and setup. Before you start using other function, you must call this method once.
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)setup;
 
-/**
- * Get the connected accessories array.
- *
- * @retval NSArray* The Array include connected accessories which you supported.
- */
-- (NSArray *)connectedAccessory;
+  // - (NSArray *)connectedAccessory __OSX_AVAILABLE_BUT_DEPRECATED(__MAC_NA,__MAC_NA,__IPHONE_NA,__IPHONE_NA);
 
 /**
  * Detect scanner accessory is connected or not.
  *
  * @retval  TRUE If one of iPDT380, iScan or aScan is connected and work fine.
  * @retval FALSE If nor iPDT380, iScan or aScan is not connected, or device error. In this status, execute command will be ignore.
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (BOOL)isConnected;
 
@@ -50,6 +50,9 @@
  * @see NotificationHandler::connectNotify
  *
  * @param handler The object implement NotificationHandler protocol which can handle accessory connected notification.
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)addAccessoryDidConnectNotification:(NSObject <NotificationHandler> *)handler;
 
@@ -62,6 +65,9 @@
  * @see NotificationHandler::connectNotify
  *
  * @param handler The object implement NotificationHandler protocol.
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)removeAccessoryDidConnectNotification:(NSObject <NotificationHandler> *)handler;
 
@@ -76,6 +82,9 @@
  * @see NotificationHandler::disconnectNotify
  *
  * @param handler The object implement NotificationHandler protocol which can handle accessory disconnected notification.
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)addAccessoryDidDisconnectNotification:(NSObject <NotificationHandler> *)handler;
 
@@ -88,6 +97,9 @@
  * @see NotificationHandler::disconnectNotify
  *
  * @param handler The object implement NotificationHandler protocol.
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)removeAccessoryDidDisconnectNotification:(NSObject <NotificationHandler> *)handler;
 
@@ -101,6 +113,9 @@
  * @see ReceiveCommandHandler
  *
  * @param handler The object implement ReceiveCommandHandler protocol which can handle receive command.
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)addReceiveCommandHandler:(NSObject <ReceiveCommandHandler> *)handler;
 
@@ -111,6 +126,9 @@
  * @see ReceiveCommandHandler
  *
  * @param handler The object implement ReceiveCommandHandler protocol.
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)removeReceiveCommandHandler:(NSObject <ReceiveCommandHandler> *)handler;
 
@@ -124,6 +142,9 @@
 
 /**
  * Tigger scanner accessory to scan barcode
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)scan;
 
@@ -132,29 +153,47 @@
  *
  * @see batteryOnCharge
  * @see batteryCapacity
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - aScan
+ * - new iPDT380 ( the old version iPDT380 before 2013/05 will not support ).
  */
 - (void)batteryRemain;
 
 /**
  * set scanner accessory battery charge
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013/05 will not support ).
  */
 - (void)chargeBattery;
 
 /**
  * set scanner accessory vibra motor strength
  *
- * @param i 0 turn vibra motor off
- * @param i 1 turn vibra motor strength small
- * @param i 2 turn vibra motor strength medium
- * @param i 3 turn vibra motor strength big
+ * @param i=0 turn vibra motor off
+ * @param i=1 turn vibra motor strength small
+ * @param i=2 turn vibra motor strength medium
+ * @param i=3 turn vibra motor strength big
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - aScan
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
  */
-- (void)vibraMotorStrength:(NSUInteger)i;
+- (void)vibraMotorStrength:(enum vibraMotorStrengthDef)i;
 
 /**
  * switch scanner accessory beep on or off
  *
  * @param status TRUE turn beep on.
  * @param status FALSE turn beep off.
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
  */
 - (void)beepSwitch:(BOOL)status;
 
@@ -163,6 +202,9 @@
  *
  * @retval  TRUE if app layout need upsidedown
  * @retval FALSE if app layout do't need upsidedown
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (BOOL)interfaceOrientationNeedUpsideDown;
 
@@ -172,6 +214,10 @@
  * @retval NSNumber return battery capacity information with percentage number, over 100% means in charging. For example: 12.5 means 12.5%.
  *
  * @see batteryOnCharge
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
  */
 - (NSNumber *)batteryCapacity;
 
@@ -182,14 +228,125 @@
  * @retval  NO battery not on charge.
  *
  * @see batteryCapacity
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
  */
 - (BOOL)batteryOnCharge;
+
+/**
+ * get accessory sound is on or off
+ *
+ * @see vibraMotorStrength
+ * @see powerRemainPercent
+ * @see powerRemainInmV
+ * @see powerRemainInMin
+ * @see updateAccessoryInfo
+ *
+ * @retval YES accessory beep after action
+ * @retval  NO accessory mute
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
+ */
+- (BOOL)isBeepStatusOn;
+
+/**
+ * get accessory vibra motor strength
+ *
+ * @retval    vibraMotorStrengthOff accessory vibra motor is off.
+ * @retval  vibraMotorStrengthSmall accessory vibra motor strength is small.
+ * @retval vibraMotorStrengthMedium accessory vibra motor strength is medium.
+ * @retval    vibraMotorStrengthBig accessory vibra motor strength is big.
+ *
+ * @see isBeepStatusOn
+ * @see powerRemainPercent
+ * @see powerRemainInmV
+ * @see powerRemainInMin
+ * @see updateAccessoryInfo
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
+ */
+- (enum vibraMotorStrengthDef)vibraMotorStrength;
+
+/**
+ * get accessory power remain percentage
+ *
+ * @retval Integer 0% <= n <= 99%, unit is percentage
+ *
+ * @see isBeepStatusOn
+ * @see vibraMotorStrength
+ * @see powerRemainInmV
+ * @see powerRemainInMin
+ * @see updateAccessoryInfo
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
+ */
+- (int)powerRemainPercent;
+
+/**
+ * get accessory power remain in mV
+ *
+ * @retval Integer 0mV <= n <= 9999mV, n is between 0V ~ 9.999V
+ *
+ * @see isBeepStatusOn
+ * @see vibraMotorStrength
+ * @see powerRemainPercent
+ * @see powerRemainInMin
+ * @see updateAccessoryInfo
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
+ */
+- (int)powerRemainInmV;
+
+/**
+ * get accessory power remain in minute
+ *
+ * @retval Integer 0 min <= n <= 9999 min
+ *
+ * @see isBeepStatusOn
+ * @see vibraMotorStrength
+ * @see powerRemainPercent
+ * @see powerRemainInmV
+ * @see updateAccessoryInfo
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
+ */
+- (int)powerRemainInMin;
+
+/**
+ * update accessory information manually
+ *
+ * @see isBeepStatusOn
+ * @see vibraMotorStrength
+ * @see powerRemainPercent
+ * @see powerRemainInmV
+ * @see powerRemainInMin
+ *
+ * \par Compatable Models:
+ * - iPDT5
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
+ */
+- (void)updateAccessoryInfo;
 
 /**
  * use this method to turn on/off prevent conitune fast scan process. If your barcode contains 'CE', please turn this option to FALSE.
  *
  * @param on  TRUE turn prevent conitune fast scan process on, default is on.
  * @param on FALSE turn prevent conitune fast scan process off.
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (void)preventFastInputWithinFastContinueInput:(BOOL)on;
 
@@ -198,14 +355,36 @@
  *
  * @retval YES trun on
  * @retval NO turn off
+ *
+ * \par Compatable Models:
+ * - All Models
  */
 - (BOOL)isPreventFastInput;
 
 /**
  * Sync Switch for 30 pin connector
+ *
+ * \par Compatable Models:
+ * - new iPDT380 ( the old version iPDT380 before 2013 will not support ).
  */
 - (void)configSyncSwitch:(BOOL)on;
 
 - (void)execute:(ExecuteCommand *)command;
+
+/**
+ * turn sdk compatable to old iPDT380/iScan mode on. If you use iPDT380/iScan had 'CE' error, you should turn it on.
+ *
+ * \par Compatable Models:
+ * - All Models
+ */
+- (void)turnCompatableModeOn;
+
+/**
+ * turn sdk compatable to old iPDT380/iScan mode off. This is default setting.
+ *
+ * \par Compatable Models:
+ * - All Models
+ */
+- (void)turnCompatableModeOff;
 
 @end

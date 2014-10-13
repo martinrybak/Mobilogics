@@ -16,7 +16,9 @@
 @protocol ReceiveCommandProtocol
 @required
 - (BOOL)canProcess:(NSData *)data;
+- (BOOL)canCompatableProcess:(NSData *)data;
 - (void)handle:(NSData *)data accessory:(MLAccessory *)mla preventFastInputFilter:(BOOL)on;
+- (void)compatableHandle:(NSData *)data accessory:(MLAccessory *)mla preventFastInputFilter:(BOOL)on;
 - (NSData *)receiveData;
 - (NSNumber *)receiveNumber;
 

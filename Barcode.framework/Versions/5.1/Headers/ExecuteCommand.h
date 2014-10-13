@@ -16,7 +16,7 @@
 - (NSData *)ipdt3802I15Package;
 - (NSData *)ascan1HM3Package;
 - (NSData *)ascan2I15Package;
-- (NSData *)ipdt5Package;
+//- (NSData *)ipdt5Package;
 - (NSData *)ipdt51O01Package;
 - (NSData *)ipdt52I15Package;
 @end

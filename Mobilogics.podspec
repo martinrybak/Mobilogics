@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.source              = { :git => "https://github.com/martinrybak/Mobilogics.git", :tag => "5.1.0" }
   s.platform            = :ios, '6.0'
   s.libraries           = 'stdc++.6'
-  s.vendored_frameworks = 'MobilogicsCore.framework'
-  s.frameworks       = 'Barcode', 'MobilogicsCore'
+  s.vendored_frameworks = 'Barcode.framework', 'MobilogicsCore.framework'
+  s.framework           = 'ExternalAccessory'
   s.requires_arc        = true
 end
